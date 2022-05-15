@@ -1,4 +1,4 @@
-import React, {FormEvent, useCallback} from 'react';
+import React, {FormEvent, useCallback, useEffect, useState} from 'react';
 import styled from "@emotion/styled";
 import useInputs from "../../hooks/useInputs";
 
@@ -16,40 +16,36 @@ const Form = styled.form`
 `;
 
 const Write = () => {
+    const [userInfo, setUserInfo] = useState(null)
     const [loginInput,handleLoginInput ,setLoginInput] = useInputs("")
     const { email, password } = loginInput;
 
     const handleSubmit = useCallback((e: FormEvent<HTMLFormElement>) => {
         e.preventDefault()
-        const formData = new FormData();
-
-        formData.append('email', email)
-        formData.append('password', password)
-
-        for(let val of formData.values()) {
-            console.log('value', val)
-        }
-
-        const usersInfo = {
-            email,
-            password
-        }
-
+        // const formData = new FormData();
+        // formData.append('email', email)
+        // formData.append('password', password)
         fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/users/login`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json",
             },
+            credentials:"same-origin",
             body: JSON.stringify({
                 email,
                 password
             })
-
         })
             .then((res) => res.json())
-            .then(data => console.log(data))
-
+            .then(data => setUserInfo(data))
     } ,[loginInput])
+
+    const handleTest = () => {
+        setUserInfo(null)
+    }
+
+    useEffect(() => {
+    }, [userInfo])
 
     return (
         <Form onSubmit={handleSubmit}>
@@ -58,6 +54,9 @@ const Write = () => {
             <label>password : </label>
             <input type={"password"} value={password || ""} name={"password"} onChange={handleLoginInput}/>
             <button type={"submit"}>로그인</button>
+            {
+                userInfo && <button onClick={handleTest}>로그아웃</button>
+            }
         </Form>
     )
 }
