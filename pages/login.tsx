@@ -2,7 +2,7 @@ import React from 'react';
 import Layout from "../components/Layout";
 import LoginForm from "../components/hospital/LoginForm";
 
-const HospitalWrite = () => {
+const Login = () => {
     return (
         <Layout>
             <LoginForm/>
@@ -10,4 +10,4 @@ const HospitalWrite = () => {
     )
 }
 
-export default HospitalWrite
+export default Login

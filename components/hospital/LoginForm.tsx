@@ -1,6 +1,9 @@
 import React, {FormEvent, useCallback, useEffect, useState} from 'react';
 import styled from "@emotion/styled";
 import useInputs from "../../hooks/useInputs";
+import {useDispatch, useSelector} from "react-redux";
+import {SET_USER_INFO} from "../../reduces/userReducer";
+import {RootState} from "../../reduces";
 
 const Form = styled.form`
   display:flex;
@@ -16,6 +19,8 @@ const Form = styled.form`
 `;
 
 const Write = () => {
+    const dispatch = useDispatch()
+    const user = useSelector((state:RootState) => state.user.userInfo)
     const [userInfo, setUserInfo] = useState(null)
     const [loginInput,handleLoginInput ,setLoginInput] = useInputs("")
     const { email, password } = loginInput;
@@ -37,7 +42,17 @@ const Write = () => {
             })
         })
             .then((res) => res.json())
-            .then(data => setUserInfo(data))
+            .then(data => {
+                console.log(data)
+                dispatch({
+                    type:SET_USER_INFO,
+                    payload: {
+                        id:'Hello World',
+                        name:'홍길동'
+                    }
+                })
+            })
+        console.log('=>',user)
     } ,[loginInput])
 
     const handleTest = () => {

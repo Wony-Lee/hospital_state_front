@@ -35,6 +35,11 @@ const NavBar = () => {
                     글작성
                     </Link>
                 </NavItem>
+                <NavItem>
+                    <Link href={"/login"}>
+                        로그인
+                    </Link>
+                </NavItem>
             </NavList>
         </NavBarLayout>
     )

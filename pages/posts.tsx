@@ -1,5 +1,5 @@
 import React from 'react';
-import List from "../components/hospital/list";
+import List from "../components/hospital/List";
 import Layout from "../components/Layout";
 
 const Posts = () => {
