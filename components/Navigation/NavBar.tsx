@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import Link from 'next/link'
 import styled from '@emotion/styled'
 
@@ -17,6 +17,22 @@ const NavItem = styled.li`
 `;
 
 const NavBar = () => {
+    const [isLogin, setIsLogin] = useState(false)
+    const handleLogout = useCallback(() => {
+        fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/users/logout`, {
+            method:"POST"
+        })
+            .then(res => console.log(res))
+            .catch(err => {
+                console.error(err, 'LOGOUT API CALL FAIL')
+            })
+        localStorage.clear();
+        setIsLogin(false)
+    }, [isLogin])
+    useEffect(()=>{
+        const isLoginCheck = localStorage.getItem('IsLogin')
+        if(isLoginCheck) setIsLogin(true)
+    },[handleLogout,isLogin])
     return (
         <NavBarLayout>
             <NavList>
@@ -35,11 +51,18 @@ const NavBar = () => {
                     글작성
                     </Link>
                 </NavItem>
-                <NavItem>
-                    <Link href={"/login"}>
-                        로그인
-                    </Link>
-                </NavItem>
+                {
+                    isLogin ?
+                    <NavItem onClick={handleLogout}>
+                        로그아웃
+                    </NavItem>
+                        :
+                    <NavItem>
+                        <Link href={"/login"}>
+                            로그인
+                        </Link>
+                    </NavItem>
+                }
             </NavList>
         </NavBarLayout>
     )

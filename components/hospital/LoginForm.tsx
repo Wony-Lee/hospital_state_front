@@ -1,9 +1,9 @@
 import React, {FormEvent, useCallback, useEffect, useState} from 'react';
+import { useRouter } from 'next/router'
 import styled from "@emotion/styled";
 import useInputs from "../../hooks/useInputs";
-import {useDispatch, useSelector} from "react-redux";
-import {SET_USER_INFO} from "../../reduces/userReducer";
-import {RootState} from "../../reduces";
+import {useAppDispatch} from "../../store/reducers";
+import {setUserInfo} from "../../reduces/user";
 
 const Form = styled.form`
   display:flex;
@@ -19,9 +19,9 @@ const Form = styled.form`
 `;
 
 const Write = () => {
-    const dispatch = useDispatch()
-    const user = useSelector((state:RootState) => state.user.userInfo)
-    const [userInfo, setUserInfo] = useState(null)
+    const router = useRouter()
+    const dispatch = useAppDispatch()
+    const [usersInfo, setUsersInfo] = useState(null)
     const [loginInput,handleLoginInput ,setLoginInput] = useInputs("")
     const { email, password } = loginInput;
 
@@ -44,23 +44,17 @@ const Write = () => {
             .then((res) => res.json())
             .then(data => {
                 console.log(data)
-                dispatch({
-                    type:SET_USER_INFO,
-                    payload: {
-                        id:'Hello World',
-                        name:'홍길동'
-                    }
-                })
+                dispatch(setUserInfo(data))
             })
-        console.log('=>',user)
+        router.push('/')
     } ,[loginInput])
 
     const handleTest = () => {
-        setUserInfo(null)
+        setUsersInfo(null)
     }
 
     useEffect(() => {
-    }, [userInfo])
+    }, [usersInfo])
 
     return (
         <Form onSubmit={handleSubmit}>
@@ -70,7 +64,7 @@ const Write = () => {
             <input type={"password"} value={password || ""} name={"password"} onChange={handleLoginInput}/>
             <button type={"submit"}>로그인</button>
             {
-                userInfo && <button onClick={handleTest}>로그아웃</button>
+                usersInfo && <button onClick={handleTest}>로그아웃</button>
             }
         </Form>
     )
