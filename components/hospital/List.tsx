@@ -1,4 +1,6 @@
 import React, {useCallback, useEffect, useState} from 'react';
+import {useAppSelector} from "../../store";
+import axios from "axios";
 
 interface Item {
     id:string;
@@ -11,6 +13,7 @@ interface Item {
 }
 
 const List = () => {
+    const {userInfo, isLogin} = useAppSelector(state => state.user)
     const [res, setRes] = useState<[]>([])
     const [uploadImg, setUploadImg] = useState<string[]>([])
     const testApiCall = useCallback(async ()=>{
@@ -38,9 +41,9 @@ const List = () => {
         //
     },[uploadImg])
 
-    const handleImgUpdate = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) =>{
+    const handleImgUpdate = useCallback(async (e: React.ChangeEvent<HTMLInputElement>, hospitalName: string) =>{
         const token = sessionStorage.getItem('token')
-        const images = e.target.files![0]!;
+        const images = e.target.files![0];
         const formData = new FormData();
         if(!images) return
         // formData.append('image', images as any)
@@ -49,28 +52,24 @@ const List = () => {
             formData.append('image', f)
             setUploadImg(prev => prev.concat(f))
         })
-
-
+        formData.append('hospitalName',hospitalName)
         for (let key of formData.keys()) {
             console.log("handleSubmit Key Form Data Check", key);
         }
         for (let value of formData.values()) {
             console.log("handleSubmit Key Form Data value", value);
         }
-
-        await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/posts/upload`,
+            await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/posts/upload`,
+                formData,
             {
-                method: "POST",
-                headers: {},
-                body:formData
-            })
-            .then(res => res.json())
-            .then(data => console.log(data))
-        console.log('e',e.target.files)
-        // formData.append('image')
-
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    },
+                    withCredentials: true,
+                })
     } ,[])
     console.log('uploadImags',uploadImg)
+
     useEffect(()=>{
         console.log(`==> process ${process.env.NEXT_PUBLIC_SERVER_URL}`)
         testApiCall()
@@ -87,7 +86,7 @@ const List = () => {
                         {item.hospitalName}{" "}
                         </button>{" "}
                         <input type={"file"}
-                               onChange={handleImgUpdate}
+                               onChange={(e)=>handleImgUpdate(e, item.hospitalName)}
                                multiple
                                accept="image/jpeg, image/jpg, image/png"
                         />
@@ -95,7 +94,8 @@ const List = () => {
                         {item.userId}{" "}
                         {item.phoneNumber}{" "}
                         {item.address}
-                        <img src={item.imgUrl}/>
+                        <img src={item.imgUrl} alt={"병원사진"}/>
+                        {item.imgUrl}
                         <button type={"submit"}>확인</button>
                     </form>
                 )

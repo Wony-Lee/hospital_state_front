@@ -1,11 +1,11 @@
 import React from 'react';
 import Layout from "../components/Layout";
-import LoginForm from "../components/hospital/LoginForm";
+import WriteForm from "../components/hospital/WriteForm";
 
 const HospitalWrite = () => {
     return (
         <Layout>
-            <LoginForm/>
+            <WriteForm/>
         </Layout>
     )
 }
