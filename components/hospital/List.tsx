@@ -20,9 +20,9 @@ const List = () => {
             .catch((e) => console.error(e, 'error'))
     },[res])
 
-    const handleCheckParam = useCallback((param:string)  => {
+    const handleCheckParam = useCallback(async (param:string)  => {
         console.log(param)
-        fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/posts/${param}`)
+        await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/posts/${param}`)
             .then(data => data.json())
             .then(post => console.log('post ==>',post))
             .catch((e) => console.log(e, 'error'))
@@ -38,7 +38,8 @@ const List = () => {
         //
     },[uploadImg])
 
-    const handleImgUpdate = useCallback((e: React.ChangeEvent<HTMLInputElement>) =>{
+    const handleImgUpdate = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) =>{
+        const token = sessionStorage.getItem('token')
         const images = e.target.files![0]!;
         const formData = new FormData();
         if(!images) return
@@ -48,13 +49,16 @@ const List = () => {
             formData.append('image', f)
             setUploadImg(prev => prev.concat(f))
         })
+
+
         for (let key of formData.keys()) {
             console.log("handleSubmit Key Form Data Check", key);
         }
         for (let value of formData.values()) {
             console.log("handleSubmit Key Form Data value", value);
         }
-        fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/posts/upload`,
+
+        await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/posts/upload`,
             {
                 method: "POST",
                 headers: {},

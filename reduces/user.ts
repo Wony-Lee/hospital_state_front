@@ -1,18 +1,20 @@
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
 
 interface IUserInfo {
-    id:string,
-    username:string,
-    email:string,
-    phoneNumber:number,
-    address:string,
-    createAt:string,
+    id?:string,
+    username?:string,
+    email?:string,
+    phoneNumber?:number,
+    address?:string,
+    createAt?:string,
     updateAt?:string,
-    isAdmin?:boolean
+    isAdmin?:boolean,
+    token:string
 }
 
 export interface IUserState {
     userInfo:IUserInfo
+    isLogin: boolean
 }
 
 export const initialState: IUserState = {
@@ -22,8 +24,10 @@ export const initialState: IUserState = {
         email:'',
         phoneNumber:0,
         address:"",
-        createAt:""
-    }
+        createAt:"",
+        token:""
+    },
+    isLogin:false
 }
 
 export const userSlice = createSlice({
@@ -32,10 +36,13 @@ export const userSlice = createSlice({
     reducers: {
         setUserInfo(state, action:PayloadAction<IUserInfo>) {
             state.userInfo = action.payload
+        },
+        setSwitchLogin(state, action:PayloadAction<boolean>) {
+            state.isLogin = action.payload
         }
     }
 })
 
-export const { setUserInfo } = userSlice.actions;
+export const { setUserInfo, setSwitchLogin } = userSlice.actions;
 
 export default userSlice;

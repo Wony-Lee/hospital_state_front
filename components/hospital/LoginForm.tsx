@@ -2,8 +2,8 @@ import React, {FormEvent, useCallback, useEffect, useState} from 'react';
 import { useRouter } from 'next/router'
 import styled from "@emotion/styled";
 import useInputs from "../../hooks/useInputs";
-import {useAppDispatch} from "../../store/reducers";
-import {setUserInfo} from "../../reduces/user";
+import {useAppDispatch} from "../../store";
+import {setSwitchLogin, setUserInfo} from "../../reduces/user";
 
 const Form = styled.form`
   display:flex;
@@ -43,15 +43,12 @@ const Write = () => {
         })
             .then((res) => res.json())
             .then(data => {
-                console.log(data)
                 dispatch(setUserInfo(data))
+                dispatch(setSwitchLogin(true))
+                sessionStorage.setItem('token',data.token)
             })
         router.push('/')
     } ,[loginInput])
-
-    const handleTest = () => {
-        setUsersInfo(null)
-    }
 
     useEffect(() => {
     }, [usersInfo])
@@ -63,9 +60,6 @@ const Write = () => {
             <label>password : </label>
             <input type={"password"} value={password || ""} name={"password"} onChange={handleLoginInput}/>
             <button type={"submit"}>로그인</button>
-            {
-                usersInfo && <button onClick={handleTest}>로그아웃</button>
-            }
         </Form>
     )
 }

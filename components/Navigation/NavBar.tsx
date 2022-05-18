@@ -1,6 +1,9 @@
 import React, {useCallback, useEffect, useState} from 'react';
 import Link from 'next/link'
 import styled from '@emotion/styled'
+import { useRouter } from 'next/router'
+import {setSwitchLogin, setUserInfo} from "../../reduces/user";
+import {useAppDispatch, useAppSelector} from "../../store";
 
 const NavBarLayout = styled.div`
   
@@ -17,7 +20,9 @@ const NavItem = styled.li`
 `;
 
 const NavBar = () => {
-    const [isLogin, setIsLogin] = useState(false)
+    const dispatch = useAppDispatch()
+    const router = useRouter()
+    const isLogin = useAppSelector(state => state.user.isLogin)
     const handleLogout = useCallback(() => {
         fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/users/logout`, {
             method:"POST"
@@ -27,12 +32,11 @@ const NavBar = () => {
                 console.error(err, 'LOGOUT API CALL FAIL')
             })
         localStorage.clear();
-        setIsLogin(false)
+        dispatch(setSwitchLogin(false))
+        router.push('/')
     }, [isLogin])
     useEffect(()=>{
-        const isLoginCheck = localStorage.getItem('IsLogin')
-        if(isLoginCheck) setIsLogin(true)
-    },[handleLogout,isLogin])
+    },[handleLogout, isLogin])
     return (
         <NavBarLayout>
             <NavList>
@@ -68,4 +72,4 @@ const NavBar = () => {
     )
 }
 
-export default NavBar
+export default React.memo(NavBar)
