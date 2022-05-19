@@ -1,11 +1,13 @@
 import {configureStore, combineReducers} from "@reduxjs/toolkit";
 import {createWrapper} from "next-redux-wrapper";
-import userReducer from "../reduces/user";
+import userSlice from "../reduces/userSlice";
 import {TypedUseSelectorHook, useDispatch, useSelector} from "react-redux";
+import modalSlice from "../reduces/modalSlice";
 
 
 const rootReducer = combineReducers({
-    user:userReducer.reducer
+    user:userSlice.reducer,
+    modal:modalSlice.reducer
 })
 const initialState = {};
 

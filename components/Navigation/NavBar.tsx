@@ -2,7 +2,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import Link from 'next/link'
 import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
-import {setSwitchLogin, setUserInfo} from "../../reduces/user";
+import {setSwitchLogin, setUserInfo} from "../../reduces/userSlice";
 import {useAppDispatch, useAppSelector} from "../../store";
 
 const NavBarLayout = styled.div`

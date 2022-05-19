@@ -1,31 +1,16 @@
 import React, {useCallback, useEffect, useState} from 'react';
-import {useAppSelector} from "../../store";
 import axios from "axios";
+import {IPosts} from "../../interface/posts";
 
-interface Item {
-    id:string;
-    address:string;
-    category:string;
-    hospitalName:string;
-    phoneNumber:number;
-    userId:string;
-    imgUrl?:string;
-}
 
-const List = () => {
-    const {userInfo, isLogin} = useAppSelector(state => state.user)
-    const [res, setRes] = useState<[]>([])
+
+const List = ({posts}:IPosts) => {
+    console.log('????',posts)
     const [uploadImg, setUploadImg] = useState<string[]>([])
-    const testApiCall = useCallback(async ()=>{
-        await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/posts`)
-            .then(data => data.json())
-            .then(posts => setRes(posts))
-            .catch((e) => console.error(e, 'error'))
-    },[res])
 
-    const handleCheckParam = useCallback(async (param:string)  => {
+    const handleCheckParam = useCallback( (param:string)  => {
         console.log(param)
-        await fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/posts/${param}`)
+         fetch(`${process.env.NEXT_PUBLIC_SERVER_URL}/posts/${param}`)
             .then(data => data.json())
             .then(post => console.log('post ==>',post))
             .catch((e) => console.log(e, 'error'))
@@ -33,16 +18,9 @@ const List = () => {
 
     const handleSubmit = useCallback((e: React.FormEvent<HTMLFormElement>)=>{
         e.preventDefault()
-        const formData = new FormData()
-
-        // uploadImg.forEach((p) => {
-        //     formData.append('image',p)
-        // })
-        //
     },[uploadImg])
 
-    const handleImgUpdate = useCallback(async (e: React.ChangeEvent<HTMLInputElement>, hospitalName: string) =>{
-        const token = sessionStorage.getItem('token')
+    const handleImgUpdate = useCallback( async(e: React.ChangeEvent<HTMLInputElement>, hospitalName: string) =>{
         const images = e.target.files![0];
         const formData = new FormData();
         if(!images) return
@@ -59,7 +37,7 @@ const List = () => {
         for (let value of formData.values()) {
             console.log("handleSubmit Key Form Data value", value);
         }
-            await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/posts/upload`,
+           await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/posts/upload`,
                 formData,
             {
                     headers: {
@@ -68,19 +46,11 @@ const List = () => {
                     withCredentials: true,
                 })
     } ,[])
-    console.log('uploadImags',uploadImg)
-
-    useEffect(()=>{
-        console.log(`==> process ${process.env.NEXT_PUBLIC_SERVER_URL}`)
-        testApiCall()
-    },[])
-    console.log(res)
-
 
     return (
         <div>
             {
-                res.map((item:Item) =>
+                posts.map((item) =>
                     <form key={item.id} onSubmit={handleSubmit} encType="multipart/form-data">
                         <button onClick={() => handleCheckParam(item.hospitalName) }>
                         {item.hospitalName}{" "}
