@@ -25,6 +25,7 @@ const Form = styled.form`
 const Write = () => {
     const router = useRouter()
     const dispatch = useAppDispatch()
+    // const [errorData, setErrorData] = useState<string[]>([])
     const [loginInput,handleLoginInput] = useInputs("")
     const { email, password } = loginInput;
     const handleSubmit = useCallback( (e: FormEvent<HTMLFormElement>) => {
@@ -38,12 +39,13 @@ const Write = () => {
                     document.cookie = `jwt=${accessToken.token}`;
                     router.push('/')
                 }
-            ).catch(err => {
+            ).catch((err) => {
+                // setErrorData(err.response.data)
                 console.error(err, 'LOGIN FAILURE')
                 dispatch(setModalOnOffSwitch(true))
         })
-
     } ,[loginInput])
+
     useEffect(() => {
     }, [])
     return (

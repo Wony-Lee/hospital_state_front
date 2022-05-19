@@ -1,8 +1,11 @@
-import React, {FormEvent, useCallback, useState} from 'react';
+import React, {FormEvent, useCallback, useEffect, useState} from 'react';
+import {useRouter} from 'next/router'
 import styled from '@emotion/styled'
 import {useAppSelector} from "../../store";
 import useInputs from "../../hooks/useInputs";
 import axios from "axios";
+import Modal from "../Modal/Modal";
+import {setModalOnOffSwitch} from "../../reduces/modalSlice";
 
 const Form = styled.form`
   display:flex;
@@ -12,12 +15,12 @@ const Form = styled.form`
 `;
 
 const WriteForm = () => {
+    const modalSwitch = useAppSelector(state => state.modal.modalSwitch)
+    const router = useRouter()
     const [images, setImages] = useState('')
-    const {userInfo} = useAppSelector(state => state.user)
+    const {userInfo, isLogin} = useAppSelector(state => state.user)
     const [postsInput, handlePosts, setPostsInput] = useInputs('')
     const { hospitalName, address, phoneNumber, category, imgUrl } = postsInput
-
-
     const handleImgUpdate = useCallback((e:React.ChangeEvent<HTMLInputElement>)=>{
         const image = e.target.files![0];
         if(!image) return;
@@ -54,28 +57,36 @@ const WriteForm = () => {
         // await axios.post(`${process.env.NEXT_PUBLIC_SERVER_URL}/posts/upload`,formData)
     },[postsInput, images, category])
 
+    useEffect(()=>{
+        if(!isLogin) {
+            router.push('/')
+        }
+    },[])
+
     return (
-        <Form onSubmit={handleSubmit}>
-            <label>id : {userInfo.id}</label>
-            <input type={"text"} readOnly={true} value={userInfo.id} name={"userId"}/>
+        <>
+            <Form onSubmit={handleSubmit}>
+                <label>id : {userInfo.id}</label>
+                <input type={"text"} readOnly={true} value={userInfo.id} name={"userId"}/>
 
-            <label>병원이름</label>
-            <input type={"text"} value={hospitalName || ""} name={"hospitalName"} onChange={handlePosts}/>
+                <label>병원이름</label>
+                <input type={"text"} value={hospitalName || ""} name={"hospitalName"} onChange={handlePosts}/>
 
-            <label>병원주소</label>
-            <input type={"text"} value={address || ""} name={"address"} onChange={handlePosts}/>
+                <label>병원주소</label>
+                <input type={"text"} value={address || ""} name={"address"} onChange={handlePosts}/>
 
-            <label>진료과목</label>
-            <input type={"text"} value={category || ""} name={"category"} onChange={handlePosts}/>
-            <label>병원 연락처</label>
-            <input type={"text"} value={phoneNumber || ""} name={"phoneNumber"} onChange={handlePosts}/>
-            <input type={"file"}
-                   onChange={handleImgUpdate}
-                   multiple
-                   accept="image/jpeg, image/jpg, image/png"
-            />
-            <button type={"submit"}>확인</button>
-        </Form>
+                <label>진료과목</label>
+                <input type={"text"} value={category || ""} name={"category"} onChange={handlePosts}/>
+                <label>병원 연락처</label>
+                <input type={"text"} value={phoneNumber || ""} name={"phoneNumber"} onChange={handlePosts}/>
+                <input type={"file"}
+                       onChange={handleImgUpdate}
+                       multiple
+                       accept="image/jpeg, image/jpg, image/png"
+                />
+                <button type={"submit"}>확인</button>
+            </Form>
+        </>
     )
 }
 

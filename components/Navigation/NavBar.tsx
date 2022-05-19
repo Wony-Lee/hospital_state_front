@@ -2,12 +2,17 @@ import React, {useCallback, useEffect, useState} from 'react';
 import Link from 'next/link'
 import styled from '@emotion/styled'
 import { useRouter } from 'next/router'
-import {setSwitchLogin, setUserInfo} from "../../reduces/userSlice";
+import {setSwitchLogin} from "../../reduces/userSlice";
 import {useAppDispatch, useAppSelector} from "../../store";
 
 const NavBarLayout = styled.div`
+  display:flex;
+  align-items: center;
+  height:40px;
   
-  border:1px solid red;
+  background-color:forestgreen;
+  border-bottom-left-radius: 16px;
+  border-bottom-right-radius: 16px;
 `;
 
 const NavList = styled.ul`
@@ -17,6 +22,11 @@ const NavList = styled.ul`
 `;
 const NavItem = styled.li`
   margin:3px;
+  a {
+    font-weight: bold;
+    color:white;
+    text-decoration: none;
+  }
 `;
 
 const NavBar = () => {
@@ -31,11 +41,11 @@ const NavBar = () => {
             .catch(err => {
                 console.error(err, 'LOGOUT API CALL FAIL')
             })
-        localStorage.clear();
         dispatch(setSwitchLogin(false))
         router.push('/')
     }, [isLogin])
     useEffect(()=>{
+
     },[handleLogout, isLogin])
     return (
         <NavBarLayout>

@@ -15,9 +15,8 @@ const Layout = styled.div<{modalSwitch: boolean}>`
 
 const Content = styled.div`
   width:400px;
-  height:400px;
+  height:250px;
   margin:0 auto;
-  padding:5px;
   
   
   box-sizing: border-box;
@@ -25,9 +24,38 @@ const Content = styled.div`
   border-radius: 8px;
   background-color:white;
   
-  p {
+  .head {
+    height: 45px;
+    margin-bottom:20px;
+    padding:5px;
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+    background-color:forestgreen;
+  }
+  
+  .head-text {
+    width:100%;
+    color:white;
+    text-align: center;
+    font-weight: bold;
+  }
+  
+  .close {
+    color:white;
     text-align: right;
     cursor: pointer;
+  }
+  
+  .message {
+    display:flex;
+    align-items: center;
+    justify-content: center;
+    height:120px;
+    p {
+      font-weight: bold;
+      font-size:20px;
+      color:red;
+    }
   }
 `;
 
@@ -46,9 +74,14 @@ const Modal = ({head, message}:Props) => {
     return (
         <Layout modalSwitch={modalSwitch}>
             <Content>
-                <p onClick={handleModalSwitch}>닫기</p>
-                <div>{head}</div>
-                <div>{message}</div>
+
+                <div className={"head"}>
+                    <p className={"close"} onClick={handleModalSwitch}>닫기</p>
+                    <p className={"head-text"}>{head}</p>
+                </div>
+                <div className={"message"}>
+                    <p>{message}</p>
+                </div>
             </Content>
         </Layout>)
 }
