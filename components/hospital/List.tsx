@@ -52,9 +52,9 @@ const List = ({posts}:IPosts) => {
             {
                 posts.map((item) =>
                     <form key={item.id} onSubmit={handleSubmit} encType="multipart/form-data">
-                        <button onClick={() => handleCheckParam(item.hospitalName) }>
+                        {/*<button onClick={() => handleCheckParam(item.hospitalName) }>*/}
                         {item.hospitalName}{" "}
-                        </button>{" "}
+                        {/*</button>{" "}*/}
                         <input type={"file"}
                                onChange={(e)=>handleImgUpdate(e, item.hospitalName)}
                                multiple
